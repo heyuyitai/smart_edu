@@ -20,4 +20,5 @@ class MySqlReader:
 
 if __name__=="__main__":
     sql_reader=MySqlReader()
+
     sql_reader.read()
