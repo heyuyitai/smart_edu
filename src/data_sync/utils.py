@@ -33,6 +33,13 @@ class Neo4jWriter:
     def __init__(self):
         self.driver=GraphDatabase.driver(**config.NEO4J_CONFIG)
 
+    def read(self, cypher,batch):
+        res = self.driver.execute_query(cypher,batch=batch)
+        return res
+
+    def writeCustomNodeOrRelation(self,cypher,properties):
+        self.driver.execute_query(cypher, batch=properties)
+
     def writeNode(self,label,properties):
         cypher = f"""
                 UNWIND $batch AS item
@@ -43,7 +50,7 @@ class Neo4jWriter:
     def writeRelation(self,start_label,end_label,type,relations):
         cypher=f"""
             UNWIND $batch AS item
-            MATCH (start:{start_label}{{id=item.start_id}}),(end:{end_label}{{id=item.end_id}})
+            MATCH (start:{start_label}{{id:item.start_id}}), (end:{end_label}{{id:item.end_id}})
             MERGE (start)-[:{type}]->(end)
         """
 
