@@ -29,6 +29,36 @@ class MySqlReader:
             ans=self.cursor.fetchall()
             print(ans[0]["Create Table"])
 
+    def getAllCourseIntroduction(self):
+        sql="""
+        select course_introduce
+        from course_info
+        """
+        res = self.read(sql)
+        introduces=[]
+        for res_dict in res:
+            print(res_dict['course_introduce'])
+            # introduces.append(res_dict['course_introduce'])
+        # print(introduces)
+
+    def getAllChapterName(self):
+        sql="""
+        select chapter_name as name
+        from chapter_info
+        """
+        res=self.read(sql)
+        for res_dict in res:
+            print(res_dict['name'])
+
+    def getAllQuestionName(self):
+        sql="""
+        select question_txt as name
+        from test_question_info
+        """
+        res=self.read(sql)
+        for res_dict in res:
+            print(res_dict['name'])
+
 class Neo4jWriter:
     def __init__(self):
         self.driver=GraphDatabase.driver(**config.NEO4J_CONFIG)
@@ -64,3 +94,6 @@ if __name__=="__main__":
 
     # sql_reader.read()
     # sql_reader.get_all_create_table_info()
+    # sql_reader.getAllCourseIntroduction()
+    # sql_reader.getAllChapterName()
+    sql_reader.getAllQuestionName()

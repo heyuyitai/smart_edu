@@ -263,35 +263,35 @@ class TableSync:
                 """
         self.neo4j_writer.writeCustomNodeOrRelation(cypher, res)
 
-    def sync_knowledge(self):
-        sql="""
-        select id,
-        point_txt as name
-        from knowledge_point
-        """
-        res=self.sql_reader.read(sql)
-        self.neo4j_writer.writeNode("KnowledgePoint",res)
-
-    def sync_question_to_knowledge(self):
-        sql="""
-        select question_id as start_id,
-        point_id as end_id
-        from test_point_question
-        """
-        res=self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Question","KnowledgePoint","HAVE",res)
-
-    def sync_course_to_knowledge(self):
-        sql="""
-        select distinct
-        tp.course_id as start_id,
-        tq.point_id as end_id
-        from test_point_question tq
-        join test_paper_question tpq on tq.question_id = tpq.question_id
-        join test_paper tp on tpq.paper_id = tp.id
-        """
-        res=self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Course","KnowledgePoint","HAVE",res)
+    # def sync_knowledge(self):
+    #     sql="""
+    #     select id,
+    #     point_txt as name
+    #     from knowledge_point
+    #     """
+    #     res=self.sql_reader.read(sql)
+    #     self.neo4j_writer.writeNode("KnowledgePoint",res)
+    #
+    # def sync_question_to_knowledge(self):
+    #     sql="""
+    #     select question_id as start_id,
+    #     point_id as end_id
+    #     from test_point_question
+    #     """
+    #     res=self.sql_reader.read(sql)
+    #     self.neo4j_writer.writeRelation("Question","KnowledgePoint","HAVE",res)
+    #
+    # def sync_course_to_knowledge(self):
+    #     sql="""
+    #     select distinct
+    #     tp.course_id as start_id,
+    #     tq.point_id as end_id
+    #     from test_point_question tq
+    #     join test_paper_question tpq on tq.question_id = tpq.question_id
+    #     join test_paper tp on tpq.paper_id = tp.id
+    #     """
+    #     res=self.sql_reader.read(sql)
+    #     self.neo4j_writer.writeRelation("Course","KnowledgePoint","HAVE",res)
 
 
 if __name__=="__main__":
