@@ -56,12 +56,19 @@ class MySqlReader:
         from test_question_info
         """
         res=self.read(sql)
+        ans=[]
         for res_dict in res:
             print(res_dict['name'])
+            ans.append(res_dict['name'])
+        return ans
 
 class Neo4jWriter:
     def __init__(self):
         self.driver=GraphDatabase.driver(**config.NEO4J_CONFIG)
+
+    def execute_query(self,cypher):
+        res = self.driver.execute_query(cypher)
+        return res
 
     def read(self, cypher,batch):
         res = self.driver.execute_query(cypher,batch=batch)
@@ -69,6 +76,13 @@ class Neo4jWriter:
 
     def writeCustomNodeOrRelation(self,cypher,properties):
         self.driver.execute_query(cypher, batch=properties)
+
+    def writeKnowledgePoint(self,label,properties,category):
+        cypher = f"""
+                UNWIND $batch AS item
+                MERGE (:{label}:{category}{{id:item.id,name:item.name}})
+                """
+        self.driver.execute_query(cypher,batch=properties)
 
     def writeNode(self,label,properties):
         cypher = f"""
