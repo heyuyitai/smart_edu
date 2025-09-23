@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 
-from data_sync.utils import MySqlReader
+from data_sync.data_utils import MySqlReader
 
 
 class Processor:

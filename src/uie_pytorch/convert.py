@@ -248,7 +248,7 @@ def extract_and_convert(input_dir, output_dir, verbose=False):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     if verbose:
-        logger.info('=' * 20 + 'save config file' + '=' * 20)
+        logger.info('=' * 20 + 'save configuration file' + '=' * 20)
     config = json.load(
         open(os.path.join(input_dir, 'model_config.json'), 'rt', encoding='utf-8'))
     if 'init_args' in config:
@@ -259,7 +259,7 @@ def extract_and_convert(input_dir, output_dir, verbose=False):
     if 'sent_type_vocab_size' in config:
         config['type_vocab_size'] = config['sent_type_vocab_size']
     config['intermediate_size'] = 4 * config['hidden_size']
-    json.dump(config, open(os.path.join(output_dir, 'config.json'),
+    json.dump(config, open(os.path.join(output_dir, 'configuration.json'),
               'wt', encoding='utf-8'), indent=4)
     if verbose:
         logger.info('=' * 20 + 'save vocab file' + '=' * 20)

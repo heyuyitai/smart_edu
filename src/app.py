@@ -1,3 +1,4 @@
+import sys
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -5,12 +6,13 @@ from pydantic import BaseModel
 from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 
-from config import config
+from configuration import config
 from web.ChatService import ChatService
+
 
 app=FastAPI()
 
-app.mount("/static",StaticFiles(directory=config.WEB_STATIV_DIR),name="static")
+app.mount("/static", StaticFiles(directory=config.WEB_STATIV_DIR), name="static")
 
 service=ChatService()
 
@@ -25,9 +27,11 @@ class Answer(BaseModel):
 def read_root():
     return RedirectResponse("/static/index.html")
 
+@app.post("/api/chat")
 def read_item(question:Question):
-    # result=service.chat()
-    return Answer(message="")
+    result=service.chat(question.message)
+    return Answer(message=result)
 
 if __name__=="__main__":
-    uvicorn.run("web.app:app",host="0.0.0.0",port=5555)
+    # print(sys.path)
+    uvicorn.run("app:app",host="0.0.0.0",port=5555)

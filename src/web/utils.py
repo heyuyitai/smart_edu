@@ -1,7 +1,7 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_neo4j import Neo4jGraph
 
-from config import config
+from configuration import config
 
 
 class IndexUtil:

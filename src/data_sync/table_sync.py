@@ -1,5 +1,5 @@
-from config.config import NEO4J_CONFIG
-from data_sync.utils import MySqlReader, Neo4jWriter
+from configuration.config import NEO4J_CONFIG
+from data_sync.data_utils import MySqlReader, Neo4jWriter
 
 
 class TableSync:
@@ -16,7 +16,7 @@ class TableSync:
         """
         res=self.sql_reader.read(sql)
 
-        self.neo4j_writer.writeNode("Category",res)
+        self.neo4j_writer.writeNode("分类",res)
 
     def sync_subject(self):
         sql="""
@@ -26,7 +26,7 @@ class TableSync:
         """
         res=self.sql_reader.read(sql)
 
-        self.neo4j_writer.writeNode("Subject",res)
+        self.neo4j_writer.writeNode("学科",res)
 
     def sync_course(self):
         sql="""
@@ -36,7 +36,7 @@ class TableSync:
         """
         res=self.sql_reader.read(sql)
 
-        self.neo4j_writer.writeNode("Course",res)
+        self.neo4j_writer.writeNode("课程",res)
 
     def sync_teacher(self):
         sql="""
@@ -47,7 +47,7 @@ class TableSync:
         res=self.sql_reader.read(sql)
         for index,dict_info in enumerate(res):
             dict_info["id"]=index
-        self.neo4j_writer.writeNode("Teacher",res)
+        self.neo4j_writer.writeNode("教师",res)
 
     def sync_price(self):
         sql = """
@@ -58,7 +58,7 @@ class TableSync:
         res = self.sql_reader.read(sql)
         for index, dict_info in enumerate(res):
             dict_info["id"] = index
-        self.neo4j_writer.writeNode("Price", res)
+        self.neo4j_writer.writeNode("价格", res)
 
     def sync_chapter(self):
         sql="""
@@ -68,7 +68,7 @@ class TableSync:
         """
         res=self.sql_reader.read(sql)
 
-        self.neo4j_writer.writeNode("Chapter",res)
+        self.neo4j_writer.writeNode("章节",res)
 
     def sync_video(self):
         sql="""
@@ -78,7 +78,7 @@ class TableSync:
         """
         res=self.sql_reader.read(sql)
 
-        self.neo4j_writer.writeNode("Video",res)
+        self.neo4j_writer.writeNode("视频",res)
 
     def sync_paper(self):
         sql="""
@@ -88,7 +88,7 @@ class TableSync:
         """
         res=self.sql_reader.read(sql)
 
-        self.neo4j_writer.writeNode("Paper",res)
+        self.neo4j_writer.writeNode("试卷",res)
 
     def sync_question(self):
         sql="""
@@ -97,7 +97,7 @@ class TableSync:
         from test_question_info
         """
         res=self.sql_reader.read(sql)
-        self.neo4j_writer.writeNode("Question",res)
+        self.neo4j_writer.writeNode("试题",res)
 
     def sync_course_to_subject(self):
         sql="""
@@ -106,7 +106,7 @@ class TableSync:
         from course_info
         """
         res=self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Course","Subject","BELONG",res)
+        self.neo4j_writer.writeRelation("课程","学科","BELONG",res)
 
     def sync_subject_to_category(self):
         sql="""
@@ -115,7 +115,7 @@ class TableSync:
         from base_subject_info
         """
         res=self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Subject","Category","BELONG",res)
+        self.neo4j_writer.writeRelation("学科","分类","BELONG",res)
 
     def sync_chapter_to_course(self):
         sql="""
@@ -124,7 +124,7 @@ class TableSync:
         from chapter_info
         """
         res=self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Chapter","Course","BELONG",res)
+        self.neo4j_writer.writeRelation("章节","课程","BELONG",res)
 
     def sync_video_to_chapter(self):
         sql = """
@@ -133,7 +133,7 @@ class TableSync:
                from video_info
                """
         res = self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Video", "Chapter", "BELONG", res)
+        self.neo4j_writer.writeRelation("视频", "章节", "BELONG", res)
 
     def sync_paper_to_course(self):
         sql = """
@@ -142,7 +142,7 @@ class TableSync:
                from test_paper
                """
         res = self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Paper", "Course", "BELONG", res)
+        self.neo4j_writer.writeRelation("试卷", "课程", "BELONG", res)
 
     def sync_question_to_paper(self):
         sql = """
@@ -151,7 +151,7 @@ class TableSync:
                from test_paper_question
                """
         res = self.sql_reader.read(sql)
-        self.neo4j_writer.writeRelation("Question", "Paper", "BELONG", res)
+        self.neo4j_writer.writeRelation("试题", "试卷", "BELONG", res)
 
     def sync_course_to_teacher(self):
         sql = """
@@ -165,7 +165,7 @@ class TableSync:
             teacher_name.append({"name":dict_info["name"]})
         cypher="""
         UNWIND $batch as item
-        MATCH (n:Teacher{name:item.name})
+        MATCH (n:教师{name:item.name})
         RETURN n.id as id
         """
         ans=self.neo4j_writer.read(cypher,batch=teacher_name)
@@ -173,7 +173,7 @@ class TableSync:
         for index,dict_info in enumerate(res):
             dict_info["end_id"]=teacher_id[index]
 
-        self.neo4j_writer.writeRelation("Course", "Teacher", "HAVE", res)
+        self.neo4j_writer.writeRelation("课程", "教师", "HAVE", res)
 
     def sync_course_to_price(self):
         sql = """
@@ -187,7 +187,7 @@ class TableSync:
             teacher_name.append({"price":dict_info["price"]})
         cypher="""
         UNWIND $batch as item
-        MATCH (n:Price{name:item.price})
+        MATCH (n:价格{name:item.price})
         RETURN n.id as id
         """
         ans=self.neo4j_writer.read(cypher,batch=teacher_name)
@@ -195,7 +195,7 @@ class TableSync:
         for index,dict_info in enumerate(res):
             dict_info["end_id"]=teacher_id[index]
 
-        self.neo4j_writer.writeRelation("Course", "Price", "HAVE", res)
+        self.neo4j_writer.writeRelation("课程", "价格", "HAVE", res)
 
     def sync_student(self):
         sql="""
@@ -208,7 +208,7 @@ class TableSync:
         print(res)
         cypher="""
         UNWIND $batch as item
-        MERGE (:Student {uid:item.uid,birthday:toString(item.birthday),gender:item.gender})
+        MERGE (:学生 {uid:item.uid,birthday:toString(item.birthday),gender:item.gender})
         """
         self.neo4j_writer.writeCustomNodeOrRelation(cypher,res)
 
@@ -223,7 +223,7 @@ class TableSync:
 
         cypher = """
                     UNWIND $batch AS item
-                    MATCH (start:Student{uid:item.start_id}), (end:Course{id:item.end_id})
+                    MATCH (start:学生{uid:item.start_id}), (end:课程{id:item.end_id})
                     MERGE (start)-[:FAVOR {create_time:toString(item.create_time)}]->(end)
                 """
         self.neo4j_writer.writeCustomNodeOrRelation(cypher,res)
@@ -239,7 +239,7 @@ class TableSync:
 
         cypher = """
                 UNWIND $batch AS item
-                MATCH (start:Student{uid:item.start_id}), (end:Question{id:item.end_id})
+                MATCH (start:学生{uid:item.start_id}), (end:试题{id:item.end_id})
                 MERGE (start)-[:ANSWER {is_correct:item.is_correct}]->(end)
                 """
         self.neo4j_writer.writeCustomNodeOrRelation(cypher, res)
@@ -258,7 +258,7 @@ class TableSync:
         print(res)
         cypher = """
                     UNWIND $batch AS item
-                    MATCH (start:Student{uid:item.start_id}), (end:Video{id:item.end_id})
+                    MATCH (start:学生{uid:item.start_id}), (end:视频{id:item.end_id})
                     MERGE (start)-[:WATCH {progress:item.progress,final_watch_time:toString(item.final_watch_time)}]->(end)
                 """
         self.neo4j_writer.writeCustomNodeOrRelation(cypher, res)
@@ -296,30 +296,26 @@ class TableSync:
 
 if __name__=="__main__":
     table_sync=TableSync()
-    # table_sync.sync_category()
-    # table_sync.sync_subject()
-    # table_sync.sync_course()
-    # table_sync.sync_teacher()
-    # table_sync.sync_price()
-    # table_sync.sync_chapter()
-    # table_sync.sync_video()
-    # table_sync.sync_paper()
-    # table_sync.sync_question()
+    table_sync.sync_category()
+    table_sync.sync_subject()
+    table_sync.sync_course()
+    table_sync.sync_teacher()
+    table_sync.sync_price()
+    table_sync.sync_chapter()
+    table_sync.sync_video()
+    table_sync.sync_paper()
+    table_sync.sync_question()
 
-    # table_sync.sync_course_to_subject()
-    # table_sync.sync_subject_to_category()
-    # table_sync.sync_chapter_to_course()
-    # table_sync.sync_video_to_chapter()
-    # table_sync.sync_paper_to_course()
-    # table_sync.sync_question_to_paper()
-    # table_sync.sync_course_to_teacher()
-    # table_sync.sync_course_to_price()
+    table_sync.sync_course_to_subject()
+    table_sync.sync_subject_to_category()
+    table_sync.sync_chapter_to_course()
+    table_sync.sync_video_to_chapter()
+    table_sync.sync_paper_to_course()
+    table_sync.sync_question_to_paper()
+    table_sync.sync_course_to_teacher()
+    table_sync.sync_course_to_price()
 
     table_sync.sync_student()
-    # table_sync.sync_student_to_course()
+    table_sync.sync_student_to_course()
     table_sync.sync_student_to_question()
-    # table_sync.sync_student_to_video()
-
-    # table_sync.sync_knowledge()
-    # table_sync.sync_question_to_knowledge()
-    # table_sync.sync_course_to_knowledge()
+    table_sync.sync_student_to_video()

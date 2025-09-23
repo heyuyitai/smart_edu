@@ -2,7 +2,7 @@
 /.venv
 /.env
 /checkpoint
-/src/config/config.py
+/src/configuration/config.py
 /pretrained
 /data
 /src/uie_pytorch/data

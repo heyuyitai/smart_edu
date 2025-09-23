@@ -34,11 +34,11 @@ class UIEModelOutput(ModelOutput):
             Span-start scores (after Sigmoid).
         end_prob (`torch.FloatTensor` of shape `(batch_size, sequence_length)`):
             Span-end scores (after Sigmoid).
-        hidden_states (`tuple(torch.FloatTensor)`, *optional*, returned when `output_hidden_states=True` is passed or when `config.output_hidden_states=True`):
+        hidden_states (`tuple(torch.FloatTensor)`, *optional*, returned when `output_hidden_states=True` is passed or when `configuration.output_hidden_states=True`):
             Tuple of `torch.FloatTensor` (one for the output of the embeddings, if the model has an embedding layer, +
             one for the output of each layer) of shape `(batch_size, sequence_length, hidden_size)`.
             Hidden-states of the model at the output of each layer plus the optional initial embedding outputs.
-        attentions (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `config.output_attentions=True`):
+        attentions (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `configuration.output_attentions=True`):
             Tuple of `torch.FloatTensor` (one for each layer) of shape `(batch_size, num_heads, sequence_length,
             sequence_length)`.
             Attentions weights after the attention softmax, used to compute the weighted average in the self-attention
@@ -62,7 +62,7 @@ class UIE(ErniePreTrainedModel):
     and behavior.
     Parameters:
         config ([`PretrainedConfig`]): Model configuration class with all the parameters of the model.
-            Initializing with a config file does not load the weights associated with the model, only the
+            Initializing with a configuration file does not load the weights associated with the model, only the
             configuration. Check out the [`~PreTrainedModel.from_pretrained`] method to load the model weights.
     """
 
@@ -76,10 +76,10 @@ class UIE(ErniePreTrainedModel):
         self.linear_end = nn.Linear(hidden_size, 1)
         self.sigmoid = nn.Sigmoid()
 
-        # if hasattr(config, 'use_task_id') and config.use_task_id:
+        # if hasattr(configuration, 'use_task_id') and configuration.use_task_id:
         #     # Add task type embedding to BERT
         #     task_type_embeddings = nn.Embedding(
-        #         config.task_type_vocab_size, config.hidden_size)
+        #         configuration.task_type_vocab_size, configuration.hidden_size)
         #     self.encoder.embeddings.task_type_embeddings = task_type_embeddings
 
         #     def hook(module, input, output):
@@ -121,7 +121,7 @@ class UIE(ErniePreTrainedModel):
             [What are token type IDs?](../glossary#token-type-ids)
         position_ids (`torch.LongTensor` of shape `({0})`, *optional*):
             Indices of positions of each input sequence tokens in the position embeddings. Selected in the range `[0,
-            config.max_position_embeddings - 1]`.
+            configuration.max_position_embeddings - 1]`.
             [What are position IDs?](../glossary#position-ids)
         head_mask (`torch.FloatTensor` of shape `(num_heads,)` or `(num_layers, num_heads)`, *optional*):
             Mask to nullify selected heads of the self-attention modules. Mask values selected in `[0, 1]`:
@@ -200,7 +200,7 @@ class UIEM(ErnieMPreTrainedModel):
     and behavior.
     Parameters:
         config ([`PretrainedConfig`]): Model configuration class with all the parameters of the model.
-            Initializing with a config file does not load the weights associated with the model, only the
+            Initializing with a configuration file does not load the weights associated with the model, only the
             configuration. Check out the [`~PreTrainedModel.from_pretrained`] method to load the model weights.
     """
 
@@ -240,7 +240,7 @@ class UIEM(ErnieMPreTrainedModel):
             [What are attention masks?](../glossary#attention-mask)
         position_ids (`torch.LongTensor` of shape `({0})`, *optional*):
             Indices of positions of each input sequence tokens in the position embeddings. Selected in the range `[0,
-            config.max_position_embeddings - 1]`.
+            configuration.max_position_embeddings - 1]`.
             [What are position IDs?](../glossary#position-ids)
         head_mask (`torch.FloatTensor` of shape `(num_heads,)` or `(num_layers, num_heads)`, *optional*):
             Mask to nullify selected heads of the self-attention modules. Mask values selected in `[0, 1]`:

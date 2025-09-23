@@ -93,7 +93,7 @@ class ErnieMConfig(PretrainedConfig):
             with Better Relative Position Embeddings (Huang et al.)](https://arxiv.org/abs/2009.13658).
         use_cache (`bool`, *optional*, defaults to `True`):
             Whether or not the model should return the last key/values attentions (not used by all models). Only
-            relevant if `config.is_decoder=True`.
+            relevant if `configuration.is_decoder=True`.
         classifier_dropout (`float`, *optional*):
             The dropout ratio for the classification head.
 
@@ -109,7 +109,7 @@ class ErnieMConfig(PretrainedConfig):
     >>> model = ErnieMModel(configuration)
 
     >>> # Accessing the model configuration
-    >>> configuration = model.config
+    >>> configuration = model.configuration
     ```"""
     model_type = "ernie_m"
 
@@ -575,7 +575,7 @@ class ErnieMLayer(nn.Module):
         if self.is_decoder and encoder_hidden_states is not None:
             if not hasattr(self, "crossattention"):
                 raise ValueError(
-                    f"If `encoder_hidden_states` are passed, {self} has to be instantiated with cross-attention layers by setting `config.add_cross_attention=True`"
+                    f"If `encoder_hidden_states` are passed, {self} has to be instantiated with cross-attention layers by setting `configuration.add_cross_attention=True`"
                 )
 
             # cross_attn cached key/values tuple is at positions 3,4 of past_key_value tuple
@@ -775,8 +775,8 @@ ERNIE_M_START_DOCSTRING = r"""
     and behavior.
 
     Parameters:
-        config ([`ErnieMConfig`]): Model configuration class with all the parameters of the model.
-            Initializing with a config file does not load the weights associated with the model, only the
+        configuration ([`ErnieMConfig`]): Model configuration class with all the parameters of the model.
+            Initializing with a configuration file does not load the weights associated with the model, only the
             configuration. Check out the [`~PreTrainedModel.from_pretrained`] method to load the model weights.
 """
 
@@ -798,7 +798,7 @@ ERNIE_M_INPUTS_DOCSTRING = r"""
             [What are attention masks?](../glossary#attention-mask)
         position_ids (`torch.LongTensor` of shape `({0})`, *optional*):
             Indices of positions of each input sequence tokens in the position embeddings. Selected in the range `[0,
-            config.max_position_embeddings - 1]`.
+            configuration.max_position_embeddings - 1]`.
 
             [What are position IDs?](../glossary#position-ids)
         head_mask (`torch.FloatTensor` of shape `(num_heads,)` or `(num_layers, num_heads)`, *optional*):
@@ -888,7 +888,7 @@ class ErnieMModel(ErnieMPreTrainedModel):
 
             - 1 for tokens that are **not masked**,
             - 0 for tokens that are **masked**.
-        past_key_values (`tuple(tuple(torch.FloatTensor))` of length `config.n_layers` with each tuple having 4 tensors of shape `(batch_size, num_heads, sequence_length - 1, embed_size_per_head)`):
+        past_key_values (`tuple(tuple(torch.FloatTensor))` of length `configuration.n_layers` with each tuple having 4 tensors of shape `(batch_size, num_heads, sequence_length - 1, embed_size_per_head)`):
             Contains precomputed key and value hidden states of the attention blocks. Can be used to speed up decoding.
 
             If `past_key_values` are used, the user can optionally input only the last `decoder_input_ids` (those that

@@ -1,23 +1,24 @@
 from datasets import load_dataset
 
-from config import config
-from data_sync.utils import MySqlReader, Neo4jWriter
+from configuration import config
+from data_sync.data_utils import MySqlReader, Neo4jWriter
+from uie_pytorch.predict import Predictor
 
 
 class TextSync:
     def __init__(self):
-        sql_reader=MySqlReader()
-        neo4j_writer=Neo4jWriter()
+        self.predictor=Predictor()
 
-    def parse_json(self,path):
-        dataset = load_dataset("json",data_files=path)['train']
-        print(dataset)
-        labels=dataset['label']
-        for label_dict in labels:
-            print(label_dict)
-        labels = [label_dict[0]['text'] for label_dict in labels]
-        print(labels)
+    def sync(self):
+        self.predictor.sync_course_knowledge_point()
+        self.predictor.sync_chapter_knowledge_point()
+        # self.predictor.sync_question_knowledge_point()
+
+        self.predictor.sync_course_to_knowledge()
+        # self.predictor.sync_chapter_to_knowledge()
+        # self.predictor.sync_question_to_knowledge()
+
 
 if __name__=="__main__":
     text_sync=TextSync()
-    text_sync.parse_json(str(config.DATA_DIR/'data.json'))
+    text_sync.sync()

@@ -2,7 +2,7 @@ import pymysql
 from neo4j import GraphDatabase
 from pymysql.cursors import DictCursor
 
-from src.config import config
+from src.configuration import config
 
 
 class MySqlReader:

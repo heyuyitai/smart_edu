@@ -580,7 +580,7 @@ python convert.py --no_validate_output
 
 ```shell
 .
-├── utils.py          # 数据处理工具
+├── data_utils.py          # 数据处理工具
 ├── model.py          # 模型组网脚本
 ├── doccano.py        # 数据标注脚本
 ├── doccano.md        # 数据标注文档
